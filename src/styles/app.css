@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --app-max-width: 1280px;
+}
+
+body {
+  background: var(--rt-bg);
+  color: var(--rt-text);
+}
+
+#app {
+  min-height: 100vh;
+}
