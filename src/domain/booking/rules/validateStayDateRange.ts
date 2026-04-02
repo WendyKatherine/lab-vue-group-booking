@@ -1,5 +1,5 @@
 import type { StayDateRange } from "../value-objects/StayDateRange";
-import type { ValidationError, ValidationResult } from "../ValidationResult";
+import type { ValidationError, ValidationResult } from "./ValidationResult";
 
 export function validateStayDateRange(stay: StayDateRange): ValidationResult {
   const errors: ValidationError[] = [];

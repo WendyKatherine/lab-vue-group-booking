@@ -1,5 +1,5 @@
 import type { GroupBooking } from "../entities/GroupBooking";
-import type { ValidationError, ValidationResult } from "../ValidationResult";
+import type { ValidationError, ValidationResult } from "./ValidationResult";
 import { validateStayDateRange } from "./validateStayDateRange";
 
 export function validateBookingForConfirmation(booking: GroupBooking): ValidationResult {
