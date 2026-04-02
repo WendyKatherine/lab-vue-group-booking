@@ -12,13 +12,8 @@ export function validateStayDateRange(stay: StayDateRange): ValidationResult {
     errors.push({ field: "stay.checkOut", message: "Check-out date is required" });
   }
 
-  if (stay.checkIn && stay.checkOut) {
-    const checkIn = new Date(stay.checkIn);
-    const checkOut = new Date(stay.checkOut);
-
-    if (checkOut <= checkIn) {
-      errors.push({ field: "stay.checkOut", message: "Check-out must be after check-in" });
-    }
+  if (stay.checkIn && stay.checkOut && stay.checkOut <= stay.checkIn) {
+    errors.push({ field: "stay.checkOut", message: "Check-out must be after check-in" });
   }
 
   return { valid: errors.length === 0, errors };
