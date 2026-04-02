@@ -1,34 +1,25 @@
 import type { GroupBooking } from "../entities/GroupBooking";
 
-// Not a pure function — generates a unique id and captures the current timestamp.
-// Pass overrides.id and overrides.createdAt for deterministic behavior in tests.
-export function createGroupBooking(overrides?: Partial<GroupBooking>): GroupBooking {
-  const now = new Date().toISOString();
+export interface CreateGroupBookingInput {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  groupName?: string;
+  externalReference?: string | null;
+  notes?: string | null;
+}
 
-  const defaults: GroupBooking = {
-    id: crypto.randomUUID(),
-    groupName: "",
-    externalReference: null,
-    status: "draft",
-    stay: {
-      checkIn: "",
-      checkOut: "",
-    },
-    participants: [],
-    assignment: {
-      roomTypeCode: null,
-      unitId: null,
-      unitLabel: null,
-    },
-    notes: null,
-    createdAt: now,
-    updatedAt: now,
-  };
-
+export function createGroupBooking(input: CreateGroupBookingInput): GroupBooking {
   return {
-    ...defaults,
-    ...overrides,
-    stay: { ...defaults.stay, ...overrides?.stay },
-    assignment: { ...defaults.assignment, ...overrides?.assignment },
+    id: input.id,
+    groupName: input.groupName ?? "",
+    externalReference: input.externalReference ?? null,
+    status: "draft",
+    stay: { checkIn: "", checkOut: "" },
+    participants: [],
+    assignment: { roomTypeCode: null, unitId: null, unitLabel: null },
+    notes: input.notes ?? null,
+    createdAt: input.createdAt,
+    updatedAt: input.updatedAt,
   };
 }
