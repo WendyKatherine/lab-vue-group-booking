@@ -4,14 +4,14 @@ import type { GroupBooking } from "@/domain/booking/entities/GroupBooking";
 import type { Participant } from "@/domain/booking/entities/Participant";
 import type { StayDateRange } from "@/domain/booking/value-objects/StayDateRange";
 import type { UnitAssignment } from "@/domain/booking/value-objects/UnitAssignment";
+import type { RoomTypeCode } from "@/domain/booking/entities/RoomType";
 import type { ValidationResult } from "@/domain/booking/rules/ValidationResult";
 import type { BookingService } from "@/services/booking/BookingService";
 import type { CreateBookingInput, UpdateBookingInput } from "@/services/booking/service-types";
 import { validateBookingForConfirmation } from "@/domain/booking/rules/validateBookingForConfirmation";
 
-const EMPTY_VALIDATION: ValidationResult = { valid: false, errors: [] };
-
 export function useGroupBookingEditor(service: BookingService) {
+  const EMPTY_VALIDATION: ValidationResult = { valid: false, errors: [] };
   const booking: Ref<GroupBooking | null> = ref(null);
   const isLoading: Ref<boolean> = ref(false);
   const isSaving: Ref<boolean> = ref(false);
@@ -30,7 +30,12 @@ export function useGroupBookingEditor(service: BookingService) {
     isLoading.value = true;
     loadError.value = null;
     try {
-      booking.value = await service.getById(id);
+      const result = await service.getById(id);
+      if (result === null) {
+        loadError.value = `Booking ${id} not found`;
+      } else {
+        booking.value = result;
+      }
     } catch (err) {
       loadError.value = err instanceof Error ? err.message : "Failed to load booking";
     } finally {
@@ -75,22 +80,43 @@ export function useGroupBookingEditor(service: BookingService) {
     booking.value = { ...booking.value, assignment };
   }
 
-  function addParticipant(participant: Participant): void {
+  function setRoomTypeCode(code: RoomTypeCode | null): void {
     if (booking.value === null) return;
     booking.value = {
       ...booking.value,
-      participants: [...booking.value.participants, participant],
+      assignment: { ...booking.value.assignment, roomTypeCode: code },
     };
+  }
+
+  function clearOtherPrimary(participants: Participant[], primaryId: string): Participant[] {
+    return participants.map((p) => (p.id === primaryId ? p : { ...p, isPrimaryContact: false }));
+  }
+
+  function addParticipant(participant: Participant): void {
+    if (booking.value === null) return;
+    const existing = booking.value.participants;
+    const updated = participant.isPrimaryContact
+      ? clearOtherPrimary([...existing, participant], participant.id)
+      : [...existing, participant];
+    booking.value = { ...booking.value, participants: updated };
   }
 
   function updateParticipant(updated: Participant): void {
     if (booking.value === null) return;
-    booking.value = {
-      ...booking.value,
-      participants: booking.value.participants.map((p) =>
-        p.id === updated.id ? updated : p
-      ),
-    };
+    const merged = booking.value.participants.map((p) =>
+      p.id === updated.id ? updated : p
+    );
+    const participants = updated.isPrimaryContact
+      ? clearOtherPrimary(merged, updated.id)
+      : merged;
+    booking.value = { ...booking.value, participants };
+  }
+
+  function setPrimaryContact(id: string): void {
+    if (booking.value === null) return;
+    const participant = booking.value.participants.find((p) => p.id === id);
+    if (participant === undefined) return;
+    updateParticipant({ ...participant, isPrimaryContact: true });
   }
 
   function removeParticipant(id: string): void {
@@ -128,7 +154,8 @@ export function useGroupBookingEditor(service: BookingService) {
 
   async function confirmBooking(): Promise<void> {
     if (booking.value === null) return;
-    if (!validateBookingForConfirmation(booking.value).valid) {
+    saveError.value = null;
+    if (!validationResult.value.valid) {
       saveError.value = "Booking has validation errors and cannot be confirmed";
       return;
     }
@@ -161,8 +188,10 @@ export function useGroupBookingEditor(service: BookingService) {
     setNotes,
     setStay,
     setAssignment,
+    setRoomTypeCode,
     addParticipant,
     updateParticipant,
+    setPrimaryContact,
     removeParticipant,
     saveBooking,
     confirmBooking,
