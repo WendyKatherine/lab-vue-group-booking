@@ -98,19 +98,17 @@ const primaryContact = computed(() =>
         <p class="rt-sidebar-card__eyebrow">Readiness</p>
       </div>
       <template v-if="validationResult.valid">
-        <span class="rt-badge" style="color: var(--rt-success); border-color: var(--rt-success); width: fit-content">
-          Ready to confirm
-        </span>
+        <span class="rt-badge rt-badge--success">Ready to confirm</span>
       </template>
       <template v-else>
-        <span class="rt-badge" style="color: var(--rt-danger); border-color: var(--rt-danger); width: fit-content">
+        <span class="rt-badge rt-badge--danger">
           {{ validationResult.errors.length }} {{ validationResult.errors.length === 1 ? 'issue' : 'issues' }}
         </span>
         <ul class="flex flex-col gap-1 mt-1">
           <li
             v-for="(error, i) in validationResult.errors"
             :key="i"
-            class="rt-copy text-xs"
+            class="rt-copy"
           >
             {{ error.message }}
           </li>

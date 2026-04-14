@@ -72,7 +72,7 @@ function submitAdd(): void {
       <span
         v-for="(error, i) in participantErrors"
         :key="i"
-        class="text-xs"
+        class="rt-copy"
         style="color: var(--rt-danger)"
       >
         {{ error }}
@@ -82,9 +82,9 @@ function submitAdd(): void {
     <table v-if="participants.length > 0" class="table table-sm">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Contact</th>
+          <th class="rt-sidebar-card__eyebrow">Name</th>
+          <th class="rt-sidebar-card__eyebrow">Email</th>
+          <th class="rt-sidebar-card__eyebrow">Contact</th>
           <th></th>
         </tr>
       </thead>

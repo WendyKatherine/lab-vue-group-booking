@@ -51,7 +51,7 @@ function errorStyle(field: string): Record<string, string> {
             </div>
 
             <div class="flex flex-col gap-1">
-              <label class="rt-copy" for="groupName">Group name</label>
+              <label class="rt-sidebar-card__eyebrow" for="groupName">Group name</label>
               <input
                 id="groupName"
                 class="rt-input"
@@ -60,13 +60,13 @@ function errorStyle(field: string): Record<string, string> {
                 :value="booking.groupName"
                 @input="emit('update:groupName', ($event.target as HTMLInputElement).value)"
               />
-              <span v-if="fieldErrors['groupName']" class="text-xs" style="color: var(--rt-danger)">
+              <span v-if="fieldErrors['groupName']" class="rt-copy" style="color: var(--rt-danger)">
                 {{ fieldErrors['groupName'] }}
               </span>
             </div>
 
             <div class="flex flex-col gap-1">
-              <label class="rt-copy" for="externalReference">External reference</label>
+              <label class="rt-sidebar-card__eyebrow" for="externalReference">External reference</label>
               <input
                 id="externalReference"
                 class="rt-input"
@@ -84,7 +84,7 @@ function errorStyle(field: string): Record<string, string> {
 
             <div class="flex gap-4">
               <div class="flex flex-col gap-1 flex-1">
-                <label class="rt-copy" for="checkIn">Check-in</label>
+                <label class="rt-sidebar-card__eyebrow" for="checkIn">Check-in</label>
                 <input
                   id="checkIn"
                   class="rt-input"
@@ -93,13 +93,13 @@ function errorStyle(field: string): Record<string, string> {
                   :value="booking.stay.checkIn"
                   @change="emit('update:stay', { ...booking.stay, checkIn: ($event.target as HTMLInputElement).value })"
                 />
-                <span v-if="fieldErrors['stay.checkIn']" class="text-xs" style="color: var(--rt-danger)">
+                <span v-if="fieldErrors['stay.checkIn']" class="rt-copy" style="color: var(--rt-danger)">
                   {{ fieldErrors['stay.checkIn'] }}
                 </span>
               </div>
 
               <div class="flex flex-col gap-1 flex-1">
-                <label class="rt-copy" for="checkOut">Check-out</label>
+                <label class="rt-sidebar-card__eyebrow" for="checkOut">Check-out</label>
                 <input
                   id="checkOut"
                   class="rt-input"
@@ -108,7 +108,7 @@ function errorStyle(field: string): Record<string, string> {
                   :value="booking.stay.checkOut"
                   @change="emit('update:stay', { ...booking.stay, checkOut: ($event.target as HTMLInputElement).value })"
                 />
-                <span v-if="fieldErrors['stay.checkOut']" class="text-xs" style="color: var(--rt-danger)">
+                <span v-if="fieldErrors['stay.checkOut']" class="rt-copy" style="color: var(--rt-danger)">
                   {{ fieldErrors['stay.checkOut'] }}
                 </span>
               </div>
@@ -126,7 +126,7 @@ function errorStyle(field: string): Record<string, string> {
             </div>
 
             <div class="flex flex-col gap-1">
-              <label class="rt-copy" for="roomType">Room type</label>
+              <label class="rt-sidebar-card__eyebrow" for="roomType">Room type</label>
               <select
                 id="roomType"
                 class="rt-input"
@@ -139,7 +139,7 @@ function errorStyle(field: string): Record<string, string> {
                   {{ rt.defaultName }}
                 </option>
               </select>
-              <span v-if="fieldErrors['assignment.roomTypeCode']" class="text-xs" style="color: var(--rt-danger)">
+              <span v-if="fieldErrors['assignment.roomTypeCode']" class="rt-copy" style="color: var(--rt-danger)">
                 {{ fieldErrors['assignment.roomTypeCode'] }}
               </span>
             </div>
