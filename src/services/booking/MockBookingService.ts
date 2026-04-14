@@ -20,6 +20,10 @@ function saveAll(bookings: GroupBooking[]): void {
 }
 
 export class MockBookingService implements BookingService {
+  async list(): Promise<GroupBooking[]> {
+    return loadAll();
+  }
+
   async getById(id: string): Promise<GroupBooking | null> {
     return loadAll().find(b => b.id === id) ?? null;
   }
